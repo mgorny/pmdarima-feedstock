@@ -1,20 +1,19 @@
 schema_version: 1
 
 context:
-  name: pmdarima
   version: "2.1.1"
 
 package:
-  name: ${{ name|lower }}
+  name: pmdarima
   version: ${{ version }}
 
 source:
-  url: https://pypi.io/packages/source/${{ name[0] }}/${{ name }}/${{ name }}-${{ version }}.tar.gz
+  url: https://pypi.org/packages/source/p/pmdarima/pmdarima-${{ version }}.tar.gz
   sha256: b8d2a0c0cd3f7ec90825fa25a917b5f66073de58033511de015a9e76e4e3d8f7
 
 build:
   number: 0
-  script: ${{ PYTHON }} -m pip install . -vv
+  script: ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
 
 requirements:
   build:
@@ -51,10 +50,11 @@ tests:
       pip_check: true
 
 about:
+  summary: Python's forecast::auto.arima equivalent
   license: MIT
   license_file: LICENSE
-  summary: Pmdarima (originally pyramid-arima, for the anagram of 'py' + 'arima') is a statistical library designed to fill the void in Python's time series analysis capabilities
   homepage: https://github.com/alkaline-ml/pmdarima
+  documentation: http://alkaline-ml.com/pmdarima
 
 extra:
   recipe-maintainers:
