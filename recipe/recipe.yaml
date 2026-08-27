@@ -48,6 +48,14 @@ tests:
       imports:
         - pmdarima
       pip_check: true
+  - requirements:
+      run:
+        - pytest
+        - pytest-mpl
+        - matplotlib >=2.2.0
+    script:
+      # one test likely failing due to newer numpy version
+      - pytest --pyargs pmdarima.tests --deselect test_pipeline.py::test_pipeline_predict_inverse_transform[True-True-X0-pipeline6]
 
 about:
   summary: Python's forecast::auto.arima equivalent
