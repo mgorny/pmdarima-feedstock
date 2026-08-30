@@ -1,0 +1,70 @@
+schema_version: 1
+
+context:
+  version: "2.1.1"
+
+package:
+  name: pmdarima
+  version: ${{ version }}
+
+source:
+  url: https://pypi.org/packages/source/p/pmdarima/pmdarima-${{ version }}.tar.gz
+  sha256: b8d2a0c0cd3f7ec90825fa25a917b5f66073de58033511de015a9e76e4e3d8f7
+
+build:
+  number: 0
+  script: ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+
+requirements:
+  build:
+    - if: build_platform != target_platform
+      then:
+        - python
+        - cross-python_${{ target_platform }}
+        - numpy >=2.0.0
+        - cython >=0.29,!=0.29.18,!=0.29.31
+    - ${{ compiler('c') }}
+    - ${{ stdlib("c") }}
+  host:
+    - python
+    - meson-python >=0.15.0
+    - numpy >=2.0.0
+    - cython >=0.29,!=0.29.18,!=0.29.31
+    - pip
+  run:
+    - python
+    - joblib >=0.11
+    - cython >=0.29,!=0.29.18,!=0.29.31
+    - pandas >=0.19
+    - scikit-learn >=0.22
+    - scipy >=1.13.0
+    - statsmodels >=0.14.5
+    - urllib3
+    - setuptools >=42,!=50.0.0
+    - packaging >=17.1
+
+tests:
+  - python:
+      imports:
+        - pmdarima
+      pip_check: true
+  - requirements:
+      run:
+        - pytest
+        - pytest-mpl
+        - matplotlib >=2.2.0
+    script:
+      # one test likely failing due to newer numpy version
+      - pytest --pyargs pmdarima.tests --deselect test_pipeline.py::test_pipeline_predict_inverse_transform[True-True-X0-pipeline6]
+
+about:
+  summary: Python's forecast::auto.arima equivalent
+  license: MIT
+  license_file: LICENSE
+  homepage: https://github.com/alkaline-ml/pmdarima
+  documentation: http://alkaline-ml.com/pmdarima
+
+extra:
+  recipe-maintainers:
+    - cdesouza21
+    - mgorny
